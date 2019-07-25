@@ -6,12 +6,14 @@
 // dataset
 const symbols =
 [
-  {numba: "one", imgEle: document.getElementById("pikachuImage")},
+  {numba: "one", imgEle: document.getElementById("pikachuImage"),
+    rewardType: symbolRewardTypeEnum.NUDGE},
   {numba: "two", imgEle: document.getElementById("charmanderImage")},
   {numba: "three", imgEle: document.getElementById("ghastlyImage")},
   {numba: "four", imgEle: document.getElementById("psyduckImage")},
   {numba: "five", imgEle: document.getElementById("snorlaxImage")},
-  {numba: "six", imgEle: document.getElementById("zaptosImage")},
+  {numba: "six", imgEle: document.getElementById("zaptosImage"), rewardType:
+    symbolRewardTypeEnum.JACKPOT},
   {numba: "seven", imgEle: document.getElementById("eveyImage")}
 ];
 
