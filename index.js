@@ -16,7 +16,7 @@ const symbols =
 ];
 
 
-var slotMachine1 = new SlotMachine(200, symbols);
+var slotMachine1 = new SlotMachine(250, symbols);
 console.log(slotMachine1);
 
 var slotMachine1Container = document.getElementById("slotMachineContainer");

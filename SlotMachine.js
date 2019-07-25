@@ -99,7 +99,7 @@ SlotMachine.prototype.step = function(timestamp) {
   // ctx.fillStyle = "black";
   // ctx.fillRect(0, 0, 600, 200);
   // code to execute end
-  if (progress > 1000) {
+  if (progress > 1500) {
     if(this.spinningReelsIndexTracker < this.reels.length){
       this.reels[this.spinningReelsIndexTracker].setSpinToStop(function(){
         console.log("callback called");

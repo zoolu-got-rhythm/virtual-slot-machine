@@ -12,6 +12,8 @@ function Reel(symbolsArr, ctx, xAxisPos, slotMachineSize, reelBoundsOffsetYAxis)
   this.endReelSpin = false;
   this.stopReel = false;
 
+  this.randomSelectedSymbolForThisReel = null;
+
   this.reelHasStoppedSpinningCallbackFn = null;
 }
 // asssign the value 4 to a reel buffer limit variable
@@ -48,31 +50,24 @@ Reel.prototype.populateInitReel = function() {
 
 Reel.prototype.update = function(){
   // console.log("updating");
-  console.log("updating");
+  // console.log("updating");
 
   if(this.stopReel)
     return;
-
-  console.log("multiples of...");
-  console.log(this.reelBoundsOffsetYAxis);
-  console.log("starting y pos");
-  console.log(this.reelViewBuffer[this.reelViewBuffer.length - 1].yPos);
-  console.log("y pos reset size");
-  console.log(this.slotMachineSize + this.reelBoundsOffsetYAxis);
 
   var self = this;
 
   this.reelViewBuffer.forEach(function(reelItemObject, i) {
     reelItemObject.yPos +=
-      self.reelBoundsOffsetYAxis / 3;
+      self.reelBoundsOffsetYAxis / 2;
   })
 
   if(Math.floor(this.reelViewBuffer[this.reelViewBuffer.length - 1].yPos + this.symbolSize)
     == Math.floor(this.slotMachineSize + this.reelBoundsOffsetYAxis)){
 
-    console.log("symbol: " + this.reelViewBuffer[this.reelViewBuffer.length - 1].symbol.imgEle.id);
+    // console.log("symbol: " + this.reelViewBuffer[this.reelViewBuffer.length - 1].symbol.imgEle.id);
 
-    console.log("hit");
+    // console.log("hit");
     this.reelViewBuffer.pop();
     if(this.reelSymbolIndex == this.symbols.length - 1){
       this.reelSymbolIndex = 0;
@@ -89,7 +84,8 @@ Reel.prototype.update = function(){
       }
     );
 
-    if(this.endReelSpin == true){
+    if(this.endReelSpin == true &&
+      this.randomSelectedSymbolForThisReel.numba === this.reelViewBuffer[2].symbol.numba){
       this.stopReel = true;
       this.reelHasStoppedSpinningCallbackFn();
     }
@@ -99,7 +95,7 @@ Reel.prototype.update = function(){
   //
   // }
 
-  console.log(this.reelViewBuffer);
+  // console.log(this.reelViewBuffer);
 }
 
 Reel.prototype.draw = function() {
@@ -108,14 +104,14 @@ Reel.prototype.draw = function() {
   if(this.ctx == null)
     return;
 
-  console.log("drawing");
+  // console.log("drawing");
   var self = this;
   this.reelViewBuffer.forEach(function(reelSymbol, i) {
-    // if(i == 3){
-    //   self.ctx.fillStyle = "lime";
-    // }else{
+    if(i == 2 && self.stopReel == true){
+      self.ctx.fillStyle = "lime";
+    }else{
       self.ctx.fillStyle = "white";
-    // }
+    }
     self.ctx.fillRect(self.xAxisPos, reelSymbol.yPos, self.symbolSize, self.symbolSize);
     self.ctx.beginPath();
     self.ctx.rect(self.xAxisPos, reelSymbol.yPos, self.symbolSize, self.symbolSize);
@@ -131,7 +127,7 @@ Reel.prototype.clearPaint = function(){
   // ctx.fillStyle = "yellow";
   if(this.ctx == null)
     return;
-  console.log("clearing");
+  // console.log("clearing");
   // this.ctx.clearRect(this.xAxisPos - 5, 0, this.xAxisPos + this.symbolSize + 5, 400);
 }
 
@@ -143,6 +139,14 @@ Reel.prototype.setSpinToStop = function(reelHasStoppedSpinningCallbackFn){
 Reel.prototype.setReadyToStart = function(){
   this.endReelSpin = false;
   this.stopReel = false;
+
+  // may need to copy symbol element oppose to referencing it
+  this.randomSelectedSymbolForThisReel = this.symbols[Math.floor(Math.random() *
+    this.symbols.length)];
+
+  console.log("random selected symbol is: ");
+  console.log(this.randomSelectedSymbolForThisReel);
+
 }
 
 Reel.prototype.hasStoppedSpinning = function(){
