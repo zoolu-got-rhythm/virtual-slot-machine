@@ -11,10 +11,13 @@ function Reel(symbolsArr, ctx, xAxisPos, slotMachineSize, reelBoundsOffsetYAxis)
   this.populateInitReel();
   this.endReelSpin = false;
   this.stopReel = false;
+  this.reelIsLocked = false;
 
   this.randomSelectedSymbolForThisReel = null;
 
   this.reelHasStoppedSpinningCallbackFn = null;
+
+  this.reelHeldColourFlashToggleState = 0; // just increment and check if odd or even
 }
 // asssign the value 4 to a reel buffer limit variable
 
@@ -52,7 +55,7 @@ Reel.prototype.update = function(){
   // console.log("updating");
   // console.log("updating");
 
-  if(this.stopReel)
+  if(this.stopReel || this.reelIsLocked)
     return;
 
   var self = this;
@@ -87,7 +90,7 @@ Reel.prototype.update = function(){
     if(this.endReelSpin == true &&
       this.randomSelectedSymbolForThisReel.numba === this.reelViewBuffer[2].symbol.numba){
       this.stopReel = true;
-      this.reelHasStoppedSpinningCallbackFn();
+      this.reelHasStoppedSpinningCallbackFn(this);
     }
   }
   //
@@ -109,6 +112,13 @@ Reel.prototype.draw = function() {
   this.reelViewBuffer.forEach(function(reelSymbol, i) {
     if(i == 2 && self.stopReel == true){
       self.ctx.fillStyle = "lime";
+    }else if(i == 2 && self.reelIsLocked){
+        if(self.reelHeldColourFlashToggleState % 2 == 0){
+          self.ctx.fillStyle = "lime";
+        }else{
+          self.ctx.fillStyle = "yellow";
+        }
+        self.reelHeldColourFlashToggleState++;
     }else{
       self.ctx.fillStyle = "white";
     }
@@ -131,9 +141,21 @@ Reel.prototype.clearPaint = function(){
   // this.ctx.clearRect(this.xAxisPos - 5, 0, this.xAxisPos + this.symbolSize + 5, 400);
 }
 
-Reel.prototype.setSpinToStop = function(reelHasStoppedSpinningCallbackFn){
+// 2 callbacks here to get around async problem, should investigate async await
+Reel.prototype.setSpinToStop = function(reelHasStoppedSpinningCallbackFn, hasStartedExecutionCallBack){
+
+  hasStartedExecutionCallBack();
+
   this.endReelSpin = true;
+
+  if(this.reelIsLocked){
+    this.stopReel = true;
+    reelHasStoppedSpinningCallbackFn(this);
+    return;
+  }
+
   this.reelHasStoppedSpinningCallbackFn = reelHasStoppedSpinningCallbackFn;
+
 }
 
 Reel.prototype.setReadyToStart = function(){
@@ -141,12 +163,38 @@ Reel.prototype.setReadyToStart = function(){
   this.stopReel = false;
 
   // may need to copy symbol element oppose to referencing it
-  this.randomSelectedSymbolForThisReel = this.symbols[Math.floor(Math.random() *
-    this.symbols.length)];
+  if(!this.reelIsLocked){
+    this.randomSelectedSymbolForThisReel = this.symbols[Math.floor(Math.random() *
+      this.symbols.length)];
+  }
 
   console.log("random selected symbol is: ");
   console.log(this.randomSelectedSymbolForThisReel);
 
+}
+
+Reel.prototype.CheckIfLocked = function(){
+  if(this.reelIsLocked){
+    // this.reelIsLocked = false;
+    return true;
+  }else{
+    return false;
+  }
+}
+
+Reel.prototype.lockReel = function(){
+  this.reelIsLocked = true;
+  // this.stopReel = true;
+}
+
+Reel.prototype.unlockReel = function(){
+  this.reelIsLocked = false;
+  // this.stopReel = false;
+  console.log("unlocking reel");
+}
+
+Reel.prototype.getRandomGeneratedRandomSymbol = function(){
+  return this.randomSelectedSymbolForThisReel; // can return null
 }
 
 Reel.prototype.hasStoppedSpinning = function(){

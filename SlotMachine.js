@@ -20,6 +20,7 @@ function SlotMachine(size, symbols){
   this.spinningReelsIndexTracker = 0;
   this.start = null;
   this.animFrameRequestId = null;
+  this.haveHoldThisGo = false;
 
 
   // var c = document.createElement("canvas");
@@ -89,33 +90,44 @@ SlotMachine.prototype.step = function(timestamp) {
 
   if (!this.start) this.start = timestamp;
   var progress = timestamp - this.start;
-  // code to execute start
+
   this.reels.forEach(function(reel){
     reel.update();
     reel.clearPaint();
     reel.draw();
   })
 
-  // ctx.fillStyle = "black";
-  // ctx.fillRect(0, 0, 600, 200);
-  // code to execute end
-  if (progress > 1500) {
+  if (progress > 1000 || this.reels[this.spinningReelsIndexTracker].CheckIfLocked()) {
     if(this.spinningReelsIndexTracker < this.reels.length){
-      this.reels[this.spinningReelsIndexTracker].setSpinToStop(function(){
+
+      console.log("spinningReelsIndexTracker is: " + this.spinningReelsIndexTracker);
+      this.reels[this.spinningReelsIndexTracker].setSpinToStop(function(reelObjectRef){
+
+
+
         console.log("callback called");
         if(self.haveAllReelsStoppedSpinning() == true){
-          console.log("canceling anim request frame");
-          window.cancelAnimationFrame(self.animFrameRequestId);
-          self.animFrameRequestId = null;
-          self.spinningReelsIndexTracker = 0;
+          self.haveAllReelsSlottedIntoThereFinalPositions(function(){
+            console.log("canceling anim request frame");
+            window.cancelAnimationFrame(self.animFrameRequestId);
+            self.animFrameRequestId = null;
+            self.spinningReelsIndexTracker = 0;
+
+            self.reels.forEach(function(reel){
+              reel.unlockReel();
+            });
+
+            // if() results symbols contain pikachu 70% chance of hold being granted
+
+            // self.checkForJackpot();
+          });
+
+        }
+      }, function(){ // this callback here is called first before above one
+        if(self.spinningReelsIndexTracker != self.reels.length - 1){
+          self.spinningReelsIndexTracker++;
         }
       });
-
-      // this statement/block of code is not needed really, just extra safety
-      if(this.spinningReelsIndexTracker != this.reels.length - 1){
-        this.spinningReelsIndexTracker++;
-      }
-
       this.start = timestamp;
     }
   }
@@ -137,12 +149,63 @@ SlotMachine.prototype.haveAllReelsStoppedSpinning = function(){
       break;
     }
   }
+  console.log("all reels have stopped spinning: " + allReelsHaveStoppedSpin);
   return allReelsHaveStoppedSpin;
+}
+
+SlotMachine.prototype.checkForJackpot = function(){
+  let isJackPot = false;
+
+  for(let i = 0; i < this.reels.length; i++){
+    let reel = this.reels[i];
+    if(reel.getRandomGeneratedRandomSymbol().rewardType ==
+      symbolRewardTypeEnum.BOARD){
+        isJackPot = true;
+      }else{
+        isJackPot = false;
+        break;
+      }
+  }
+
+  if(isJackPot){
+    //callback
+  }
+}
+
+SlotMachine.prototype.haveAllReelsSlottedIntoThereFinalPositions = function(reelsHaveSlottedIntoFinalPositionsCallback){
+  var self = this;
+  var reelsHaveSlottedIntoFinalPositions = false;
+  var tid = window.setInterval(function(){
+    console.log("waiting for reels to slot into position");
+    for(let i = 0; i < self.reels.length; i++){
+      var reel = self.reels[i];
+      console.log(reel.hasStoppedSpinning());
+      if(reel.hasStoppedSpinning()){
+        reelsHaveSlottedIntoFinalPositions = true;
+      }else{
+        reelsHaveSlottedIntoFinalPositions = false;
+        break;
+      }
+    }
+    if(reelsHaveSlottedIntoFinalPositions){
+      console.log("clearing timer");
+      window.clearInterval(tid);
+      reelsHaveSlottedIntoFinalPositionsCallback();
+    }
+  }, 50);
+}
+
+SlotMachine.prototype.holdReel = function(reelIndex){
+  if(this.haveHoldThisGo)
+    this.reels[reelIndex].lockReel();
 }
 
 
 SlotMachine.prototype.spinReels = function(){
+  var self = this;
   if(this.haveAllReelsStoppedSpinning() || this.firstGo){
+
+
     this.firstGo = false;
     this.start = null;
     this.reels.forEach(function(reel){

@@ -1,6 +1,6 @@
 const symbolRewardTypeEnum = {
   JACKPOT: 1,
-  NUDGE: 2,
+  BOARD: 2,
   NONE: 3
 }
 

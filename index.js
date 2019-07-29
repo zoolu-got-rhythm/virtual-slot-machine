@@ -7,7 +7,7 @@
 const symbols =
 [
   {numba: "one", imgEle: document.getElementById("pikachuImage"),
-    rewardType: symbolRewardTypeEnum.NUDGE},
+    rewardType: symbolRewardTypeEnum.BOARD},
   {numba: "two", imgEle: document.getElementById("charmanderImage")},
   {numba: "three", imgEle: document.getElementById("ghastlyImage")},
   {numba: "four", imgEle: document.getElementById("psyduckImage")},
@@ -18,7 +18,7 @@ const symbols =
 ];
 
 
-var slotMachine1 = new SlotMachine(250, symbols);
+var slotMachine1 = new SlotMachine(200, symbols);
 console.log(slotMachine1);
 
 var slotMachine1Container = document.getElementById("slotMachineContainer");
@@ -29,3 +29,6 @@ let startSpinButton = document.getElementById("startSpin");
 startSpinButton.addEventListener("click", function(){
   slotMachine1.spinReels();
 });
+
+slotMachine1.holdReel(2);
+slotMachine1.holdReel(0);
