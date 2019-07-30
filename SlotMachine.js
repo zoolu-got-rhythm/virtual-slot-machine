@@ -196,7 +196,7 @@ SlotMachine.prototype.haveAllReelsSlottedIntoThereFinalPositions = function(reel
 }
 
 SlotMachine.prototype.holdReel = function(reelIndex){
-  if(this.haveHoldThisGo)
+  // if(this.haveHoldThisGo)
     this.reels[reelIndex].lockReel();
 }
 

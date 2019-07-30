@@ -30,5 +30,21 @@ startSpinButton.addEventListener("click", function(){
   slotMachine1.spinReels();
 });
 
+var holdAndNudgeButtonsContainer = document.createElement("div");
+for(let i = 0; i < 3; i++){
+  let button = document.createElement("button");
+  button.classList.add("flashit");
+  button.style.width = (200 / 4) + "px";
+  button.style.height = (200 / 4) + "px";
+  let textNode = document.createTextNode("hold");
+  button.appendChild(textNode);
+  button.addEventListener("click", function(){
+    slotMachine1.holdReel(i);
+  });
+  holdAndNudgeButtonsContainer.appendChild(button);
+}
+
+document.body.appendChild(holdAndNudgeButtonsContainer);
+
 slotMachine1.holdReel(2);
 slotMachine1.holdReel(0);
