@@ -18,17 +18,32 @@ const symbols =
 ];
 
 
-var slotMachine1 = new SlotMachine(200, symbols);
+var slotMachine1 = new SlotMachine(200, symbols); // make is ready callback/listener mandatory?
 console.log(slotMachine1);
 
 var slotMachine1Container = document.getElementById("slotMachineContainer");
 slotMachine1.appendVisualToParentInDom(slotMachine1Container);
 console.log(slotMachine1);
 
+
 let startSpinButton = document.getElementById("startSpin");
 startSpinButton.addEventListener("click", function(){
   slotMachine1.spinReels();
 });
+
+startSpinButton.classList.add("isReadyToSpin");
+slotMachine1.setIsReadyToSpinListener(function(isReady){
+  if(isReady){
+    console.log("flash button");
+    startSpinButton.classList.remove("isNotReadyToSpin");
+    startSpinButton.classList.add("isReadyToSpin");
+  }else{
+    startSpinButton.classList.remove("isReadyToSpin");
+    startSpinButton.classList.add("isNotReadyToSpin");
+  }
+});
+
+
 
 var holdAndNudgeButtonsContainer = document.createElement("div");
 for(let i = 0; i < 3; i++){

@@ -21,6 +21,9 @@ function SlotMachine(size, symbols){
   this.start = null;
   this.animFrameRequestId = null;
   this.haveHoldThisGo = false;
+  this.reelsAreLockedFromHoldsAndNudges = false;
+
+  this.isReadyToSpinListener = null;
 
 
   // var c = document.createElement("canvas");
@@ -52,6 +55,11 @@ SlotMachine.prototype.init = function(){
   for(let i = 0; i < this.nOfReels; i++){
     this.reels.push(new Reel(this.symbols, this.ctx, i * (this.size / this.nOfReels),
       this.size, this.reelBoundsOffsetYAxis));
+  }
+
+  // this block will never run
+  if(this.isReadyToSpinListener != null){
+    this.isReadyToSpinListener(true);
   }
 }
 
@@ -116,6 +124,13 @@ SlotMachine.prototype.step = function(timestamp) {
             self.reels.forEach(function(reel){
               reel.unlockReel();
             });
+
+            self.reelsAreLockedFromHoldsAndNudges = false;
+
+            console.log(self.isReadyToSpinListener);
+            if(self.isReadyToSpinListener != null){
+              self.isReadyToSpinListener(true);
+            }
 
             // if() results symbols contain pikachu 70% chance of hold being granted
 
@@ -196,8 +211,14 @@ SlotMachine.prototype.haveAllReelsSlottedIntoThereFinalPositions = function(reel
 }
 
 SlotMachine.prototype.holdReel = function(reelIndex){
-  // if(this.haveHoldThisGo)
+  if(!this.reelsAreLockedFromHoldsAndNudges)
     this.reels[reelIndex].lockReel();
+}
+
+
+SlotMachine.prototype.setIsReadyToSpinListener = function(listener){
+  console.log(listener);
+  this.isReadyToSpinListener = listener; // callback listener func has 1 param true or false
 }
 
 
@@ -205,6 +226,9 @@ SlotMachine.prototype.spinReels = function(){
   var self = this;
   if(this.haveAllReelsStoppedSpinning() || this.firstGo){
 
+    if(this.isReadyToSpinListener != null)
+      this.isReadyToSpinListener(false);
+    this.reelsAreLockedFromHoldsAndNudges = true;
 
     this.firstGo = false;
     this.start = null;
