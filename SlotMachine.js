@@ -92,7 +92,7 @@ SlotMachine.prototype.init = function(){
 // })
 
 
-
+// rename to spin reels
 SlotMachine.prototype.step = function(timestamp) {
   var self = this;
 
@@ -221,6 +221,27 @@ SlotMachine.prototype.setIsReadyToSpinListener = function(listener){
   this.isReadyToSpinListener = listener; // callback listener func has 1 param true or false
 }
 
+SlotMachine.prototype.nudgeReel = function(reelIndex){
+  var rid;
+  var step = function(){
+    // update reel
+    this.reels[reelIndex].update();
+    this.reels[reelIndex].clearPaint();
+    this.reels[reelIndex].draw();
+    if(this.reels[reelIndex].isCurrentlyBeingNudged == false){
+      window.cancelAnimationFrame(rid);
+      rid = null;
+    }else{
+      rid = window.requestAnimationFrame(step.bind(this));
+    }
+  }
+
+  if(!this.reelsAreLockedFromHoldsAndNudges && !this.firstGo){
+    this.reels[reelIndex].nudge();
+    rid = window.requestAnimationFrame(step.bind(this));
+  }
+}
+
 
 SlotMachine.prototype.spinReels = function(){
   var self = this;
@@ -234,7 +255,8 @@ SlotMachine.prototype.spinReels = function(){
     this.start = null;
     this.reels.forEach(function(reel){
       reel.setReadyToStart();
-    })
+    });
+
     this.animFrameRequestId = window.requestAnimationFrame(this.step.bind(this));
   }
 }

@@ -12,6 +12,7 @@ function Reel(symbolsArr, ctx, xAxisPos, slotMachineSize, reelBoundsOffsetYAxis)
   this.endReelSpin = false;
   this.stopReel = false;
   this.reelIsLocked = false;
+  this.isCurrentlyBeingNudged = false;
 
   this.randomSelectedSymbolForThisReel = null;
 
@@ -54,9 +55,10 @@ Reel.prototype.populateInitReel = function() {
 Reel.prototype.update = function(){
   // console.log("updating");
   // console.log("updating");
-
-  if(this.stopReel || this.reelIsLocked)
-    return;
+  if(!this.isCurrentlyBeingNudged){
+    if(this.stopReel || this.reelIsLocked)
+      return;
+  }
 
   var self = this;
 
@@ -90,6 +92,7 @@ Reel.prototype.update = function(){
     if(this.endReelSpin == true &&
       this.randomSelectedSymbolForThisReel.numba === this.reelViewBuffer[2].symbol.numba){
       this.stopReel = true;
+      this.isCurrentlyBeingNudged = false;
       this.reelHasStoppedSpinningCallbackFn(this);
     }
   }
@@ -170,6 +173,18 @@ Reel.prototype.setReadyToStart = function(){
 
   console.log("random selected symbol is: ");
   console.log(this.randomSelectedSymbolForThisReel);
+
+}
+
+Reel.prototype.nudge = function(){
+  this.endReelSpin = true;
+  // this.stopReel = false;
+  this.isCurrentlyBeingNudged = true;
+
+  let currentIndex = this.symbols.indexOf(this.randomSelectedSymbolForThisReel);
+  // increment + 1 in a cycle: using modulo cycle trick
+  currentIndex = (currentIndex + 1) % this.symbols.length;
+  this.randomSelectedSymbolForThisReel = this.symbols[currentIndex];
 
 }
 

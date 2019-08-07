@@ -41,7 +41,7 @@ for(let i = 0; i < 3; i++){
   let textNode = document.createTextNode("hold");
   button.appendChild(textNode);
   button.addEventListener("click", function(){
-    slotMachine1.holdReel(i);
+    slotMachine1.nudgeReel(i);
   });
   holdAndNudgeButtonsContainer.appendChild(button);
 }
