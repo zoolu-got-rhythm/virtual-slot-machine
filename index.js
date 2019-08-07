@@ -79,5 +79,5 @@ document.body.appendChild(holdAndNudgeButtonsContainer);
 
 
 
-slotMachine1.holdReel(2);
-slotMachine1.holdReel(0);
+// slotMachine1.holdReel(2);
+// slotMachine1.holdReel(0);
