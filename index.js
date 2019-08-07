@@ -26,7 +26,35 @@ slotMachine1.appendVisualToParentInDom(slotMachine1Container);
 console.log(slotMachine1);
 
 
-let startSpinButton = document.getElementById("startSpin");
+
+
+
+
+var holdAndNudgeButtonsContainer = document.createElement("div");
+holdAndNudgeButtonsContainer.classList.add("buttonsContainer");
+
+for(let i = 0; i < 3; i++){
+  let button = document.createElement("button");
+  button.classList.add("nudgeOrMove");
+  button.style.width = (200 / 4) + "px";
+  button.style.height = (200 / 4) + "px";
+  let textNode = document.createTextNode("hold");
+  button.appendChild(textNode);
+  button.addEventListener("click", function(){
+    slotMachine1.holdReel(i);
+  });
+  holdAndNudgeButtonsContainer.appendChild(button);
+}
+
+
+
+let startSpinButton = document.createElement("button");
+startSpinButton.style.width = (200 / 4) + "px";
+startSpinButton.style.height = (200 / 4) + "px";
+let spinTextNode = document.createTextNode("spin");
+startSpinButton.appendChild(spinTextNode);
+
+// let startSpinButton = document.getElementById("startSpin");
 startSpinButton.addEventListener("click", function(){
   slotMachine1.spinReels();
 });
@@ -43,23 +71,13 @@ slotMachine1.setIsReadyToSpinListener(function(isReady){
   }
 });
 
-
-
-var holdAndNudgeButtonsContainer = document.createElement("div");
-for(let i = 0; i < 3; i++){
-  let button = document.createElement("button");
-  button.classList.add("flashit");
-  button.style.width = (200 / 4) + "px";
-  button.style.height = (200 / 4) + "px";
-  let textNode = document.createTextNode("hold");
-  button.appendChild(textNode);
-  button.addEventListener("click", function(){
-    slotMachine1.holdReel(i);
-  });
-  holdAndNudgeButtonsContainer.appendChild(button);
-}
+holdAndNudgeButtonsContainer.appendChild(startSpinButton);
 
 document.body.appendChild(holdAndNudgeButtonsContainer);
+
+
+
+
 
 slotMachine1.holdReel(2);
 slotMachine1.holdReel(0);
