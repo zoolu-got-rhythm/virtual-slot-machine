@@ -18,7 +18,7 @@ const symbols =
 ];
 
 
-var slotMachine1 = new SlotMachine(200, symbols); // make is ready callback/listener mandatory?
+var slotMachine1 = new SlotMachine(250, symbols); // make is ready callback/listener mandatory?
 console.log(slotMachine1);
 
 var slotMachine1Container = document.getElementById("slotMachineContainer");
