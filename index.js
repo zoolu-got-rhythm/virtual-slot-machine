@@ -36,12 +36,12 @@ holdAndNudgeButtonsContainer.classList.add("buttonsContainer");
 for(let i = 0; i < 3; i++){
   let button = document.createElement("button");
   button.classList.add("nudgeOrMove");
-  button.style.width = (200 / 4) + "px";
-  button.style.height = (200 / 4) + "px";
+  button.style.width = (250 / 3) + "px";
+  button.style.height = (250 / 3) + "px";
   let textNode = document.createTextNode("hold");
   button.appendChild(textNode);
   button.addEventListener("click", function(){
-    slotMachine1.nudgeReel(i);
+    slotMachine1.holdReel(i);
   });
   holdAndNudgeButtonsContainer.appendChild(button);
 }

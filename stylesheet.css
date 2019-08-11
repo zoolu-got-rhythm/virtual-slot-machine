@@ -19,8 +19,22 @@
   background-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
 }
 
+#gamblingMachineContainer{
+  background:blue;
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
+  width: 350px;
+  /* height: 200px; */
+  padding: 5px;
+}
+
+#clear{
+  clear: both;
+}
 
 #slotMachineContainer{
+  float: left;
   position: relative;
   display: inline-block;
   padding: 5px;
@@ -34,7 +48,45 @@
   background: lime;
   /* -webkit-animation: flash linear 1s infinite;
   animation: flash linear 1s infinite; */
-  margin-left: 15px;
+  margin-left: 2px;
+}
+
+#creditInformationContainer{
+  margin-left: 5px;
+  flex-grow: 1;
+  border: 2px solid black;
+}
+
+#credits-remaining-container{
+  height:30%;
+  border:3px solid red;
+  border-radius: 6px;
+  position: relative;
+  margin-top: 10px;
+  background: yellow;
+}
+
+#credit-title{
+  position: absolute;
+  width:80%;
+  height:20px;
+  left: 8%;
+  background: red;
+  border-radius: 6px;
+  top:-15px;
+  border:2px solid black;
+  border-bottom: 4px solid black;
+}
+
+#credit-container{
+  padding: 10px;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  position: absolute;
+  /* margin: 0 auto; */
+  text-align: center;
+  width: calc(100% - 20px);
+  bottom: 0px;
 }
 
 .isReadyToSpin{
