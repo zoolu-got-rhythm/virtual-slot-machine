@@ -2,10 +2,18 @@
 // var ctx = c.getContext("2d");
 
 // let symbolSize = 60;
+const holdOrNudgesEnum = {
+  HOLDS: 0,
+  NUDGES: 1
+}
+
 
 function SlotMachine(size, symbols){
   // symbols is the dataset of symbols you need to provide of type:
   // {numba: string, imgEle: HTMLImageElementRef}
+
+  Observable.call(this); // not sure if this is needed
+
   this.symbols = symbols;
 
   this.ctx = null;
@@ -21,9 +29,15 @@ function SlotMachine(size, symbols){
   this.start = null;
   this.animFrameRequestId = null;
   this.haveHoldThisGo = false;
-  this.reelsAreLockedFromHoldsAndNudges = false;
+  this.reelsAreLockedFromHolds = true;
+  this.reelsAreLockedFromNudges = true;
+  this.nudges = 0;
 
   this.isReadyToSpinListener = null;
+  this.nudgesAndHoldListener = null;
+  this.credit = 0;
+
+  this.waitingForCallback = false;
 
 
   // var c = document.createElement("canvas");
@@ -31,6 +45,9 @@ function SlotMachine(size, symbols){
   // c.height = size - (size / 3);
   this.init();
 }
+
+SlotMachine.prototype = Object.create(Observable.prototype);
+SlotMachine.prototype.constructor = SlotMachine;
 
 SlotMachine.prototype.appendVisualToParentInDom = function(parentElement){
   // set shouldDraw to true when this method is called
@@ -105,7 +122,9 @@ SlotMachine.prototype.step = function(timestamp) {
     reel.draw();
   })
 
-  if (progress > 1000 || this.reels[this.spinningReelsIndexTracker].CheckIfLocked()) {
+  console.log("step running");
+
+  if (progress > 500 || this.reels[this.spinningReelsIndexTracker].CheckIfLocked()) {
     if(this.spinningReelsIndexTracker < this.reels.length){
 
       console.log("spinningReelsIndexTracker is: " + this.spinningReelsIndexTracker);
@@ -114,7 +133,8 @@ SlotMachine.prototype.step = function(timestamp) {
 
 
         console.log("callback called");
-        if(self.haveAllReelsStoppedSpinning() == true){
+        if(self.haveAllReelsStoppedSpinning() == true && self.waitingForCallback == false){
+          self.waitingForCallback = true;
           self.haveAllReelsSlottedIntoThereFinalPositions(function(){
             console.log("canceling anim request frame");
             window.cancelAnimationFrame(self.animFrameRequestId);
@@ -125,7 +145,8 @@ SlotMachine.prototype.step = function(timestamp) {
               reel.unlockReel();
             });
 
-            self.reelsAreLockedFromHoldsAndNudges = false;
+            // self.reelsAreLockedFromHolds = false;
+            console.log("have all reels slotted into there positions callback running");
 
             console.log(self.isReadyToSpinListener);
             if(self.isReadyToSpinListener != null){
@@ -133,7 +154,15 @@ SlotMachine.prototype.step = function(timestamp) {
             }
 
             // if() results symbols contain pikachu 70% chance of hold being granted
-
+            if(self.checkForNOfBonusSymbols() == 1 && self.hasDiceRollPassed(75)){
+              self.grantHold();
+            }else if(self.checkForNOfBonusSymbols() == 2 && self.hasDiceRollPassed(65)){
+              if(self.hasDiceRollPassed(50)){
+                self.grantHold();
+              }else{
+                self.grantNudges(Math.ceil(Math.random()*3)); // grant up to 3 nudges , minimum 1
+              }
+            }
             // self.checkForJackpot();
           });
 
@@ -152,6 +181,40 @@ SlotMachine.prototype.step = function(timestamp) {
   }else{
     this.animFrameRequestId = window.requestAnimationFrame(this.step.bind(this));
   }
+}
+
+SlotMachine.prototype.grantNudges = function(nOfNudges){
+  // this.reelsAreLockedFromHolds = true;
+  this.reelsAreLockedFromNudges = false;
+  this.nudges = nOfNudges;
+  this.update();
+}
+
+SlotMachine.prototype.hasDiceRollPassed = function(threshHoldPercentageInteger){
+  return Math.floor(Math.random() * 100) < threshHoldPercentageInteger;
+}
+
+SlotMachine.prototype.checkForNOfBonusSymbols = function(){
+  var nOfBonusSymbols = 0;
+  for(let i = 0; i < this.reels.length; i++){
+    let reel = this.reels[i];
+    if(reel.getRandomGeneratedRandomSymbol().rewardType ==
+      symbolRewardTypeEnum.BOARD){
+        nOfBonusSymbols++;
+      }
+  }
+  return nOfBonusSymbols;
+}
+
+SlotMachine.prototype.grantHold = function(){
+  this.reelsAreLockedFromHolds = false;
+  // if(this.nudgesAndHoldListener != null)
+  //   this.nudgesAndHoldListener(holdOrNudgesEnum.HOLDS);
+  this.update();
+}
+
+SlotMachine.prototype.setNudgesAndHoldListener = function(listener){
+  this.nudgesAndHoldListener = listener;
 }
 
 
@@ -174,7 +237,7 @@ SlotMachine.prototype.checkForJackpot = function(){
   for(let i = 0; i < this.reels.length; i++){
     let reel = this.reels[i];
     if(reel.getRandomGeneratedRandomSymbol().rewardType ==
-      symbolRewardTypeEnum.BOARD){
+      symbolRewardTypeEnum.JACKPOT){
         isJackPot = true;
       }else{
         isJackPot = false;
@@ -183,8 +246,14 @@ SlotMachine.prototype.checkForJackpot = function(){
   }
 
   if(isJackPot){
+    // add money to earnings;
     //callback
   }
+}
+
+SlotMachine.prototype.addCredit = function(amount){
+  this.credit = amount;
+  this.update();
 }
 
 SlotMachine.prototype.haveAllReelsSlottedIntoThereFinalPositions = function(reelsHaveSlottedIntoFinalPositionsCallback){
@@ -211,10 +280,10 @@ SlotMachine.prototype.haveAllReelsSlottedIntoThereFinalPositions = function(reel
 }
 
 SlotMachine.prototype.holdReel = function(reelIndex){
-  if(!this.reelsAreLockedFromHoldsAndNudges)
+  if(!this.reelsAreLockedFromHolds){
     this.reels[reelIndex].lockReel();
+  }
 }
-
 
 SlotMachine.prototype.setIsReadyToSpinListener = function(listener){
   console.log(listener);
@@ -223,7 +292,7 @@ SlotMachine.prototype.setIsReadyToSpinListener = function(listener){
 
 SlotMachine.prototype.nudgeReel = function(reelIndex){
   var rid;
-  var step = function(){
+  var stepLocal = function(){
     // update reel
     this.reels[reelIndex].update();
     this.reels[reelIndex].clearPaint();
@@ -232,30 +301,43 @@ SlotMachine.prototype.nudgeReel = function(reelIndex){
       window.cancelAnimationFrame(rid);
       rid = null;
     }else{
-      rid = window.requestAnimationFrame(step.bind(this));
+      rid = window.requestAnimationFrame(stepLocal.bind(this));
     }
   }
 
-  if(!this.reelsAreLockedFromHoldsAndNudges && !this.firstGo){
+  if(!this.reelsAreLockedFromNudges && !this.firstGo && (this.nudges > 0)){
+    console.log("nudges remaining before this nudge:" + this.nudges);
     this.reels[reelIndex].nudge();
-    rid = window.requestAnimationFrame(step.bind(this));
+    this.nudges = this.nudges - 1;
+    rid = window.requestAnimationFrame(stepLocal.bind(this));
   }
+}
+
+SlotMachine.prototype.update = function(){
+  console.log("calling update");
+  this.notify(Object.create(this));
 }
 
 
 SlotMachine.prototype.spinReels = function(){
   var self = this;
-  if(this.haveAllReelsStoppedSpinning() || this.firstGo){
-
+  if(this.credit >= 10 && (this.haveAllReelsStoppedSpinning() || this.firstGo)){
+    this.credit = this.credit - 10;
     if(this.isReadyToSpinListener != null)
       this.isReadyToSpinListener(false);
-    this.reelsAreLockedFromHoldsAndNudges = true;
+    this.reelsAreLockedFromHolds = true;
+    this.reelsAreLockedFromNudges = true;
+    this.waitingForCallback = false; // rename this member variable
+    this.nudges = 0;
 
     this.firstGo = false;
     this.start = null;
     this.reels.forEach(function(reel){
       reel.setReadyToStart();
     });
+
+    console.log("about to call update");
+    this.update(); // notify any observers that are register'd
 
     this.animFrameRequestId = window.requestAnimationFrame(this.step.bind(this));
   }

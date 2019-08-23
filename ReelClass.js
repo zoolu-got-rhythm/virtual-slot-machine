@@ -93,7 +93,10 @@ Reel.prototype.update = function(){
       this.randomSelectedSymbolForThisReel.numba === this.reelViewBuffer[2].symbol.numba){
       this.stopReel = true;
       this.isCurrentlyBeingNudged = false;
-      this.reelHasStoppedSpinningCallbackFn(this);
+      if(this.reelHasStoppedSpinningCallbackFn != null){
+        this.reelHasStoppedSpinningCallbackFn(this);
+        this.reelHasStoppedSpinningCallbackFn = null;
+      }
     }
   }
   //

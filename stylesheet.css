@@ -1,5 +1,14 @@
+*{
+}
+
 #c{
   background: #ccc;
+}
+
+
+@font-face{
+ font-family:'digital-font';
+ src: url('digital-7.regular.ttf');
 }
 
 #gradTop {
@@ -20,13 +29,17 @@
 }
 
 #gamblingMachineContainer{
-  background:blue;
+  /* background:blue; */
   /* position: relative; */
+  border: 5px solid #777;
+  border-bottom: 12px solid #222;
+  border-radius: 5px;
   display: flex;
   flex-direction: row;
-  width: 350px;
+  width: 280px;
   /* height: 200px; */
   padding: 5px;
+  /* margin: 0 auto;  */
 }
 
 #clear{
@@ -42,19 +55,45 @@
 }
 
 .nudgeOrMove{
-  border: 5px solid grey;
-  border-bottom: 5px solid #333;
+  cursor: pointer;
+  border: 5px solid #777;
+  border-bottom: 12px solid #222;
   border-radius: 5px;
   background: lime;
   /* -webkit-animation: flash linear 1s infinite;
   animation: flash linear 1s infinite; */
+  margin-left: 15px;
+  /* margin-bottom: 0px; */
+
+}
+
+/* .nudgeOrMove:active{
+  cursor: pointer;
+  border: 5px solid #777;
+  border-bottom: 5px solid #333;
+  border-radius: 5px;
+  background: lime;
+
   margin-left: 2px;
+} */
+
+#credit-earnings{
+  position: absolute;
+  border:3px solid red;
+  border-radius: 6px;
+  padding: 5px;
+  background: yellow;
+  text-align: center;
+  bottom: 0px;
+  width: calc(100% - 16px);
+  font-family: digital-font;
 }
 
 #creditInformationContainer{
+  position: relative;
   margin-left: 5px;
   flex-grow: 1;
-  border: 2px solid black;
+  /* border: 2px solid black; */
 }
 
 #credits-remaining-container{
@@ -69,6 +108,7 @@
 #credit-title{
   position: absolute;
   width:80%;
+  padding-top: 2px;
   height:20px;
   left: 8%;
   background: red;
@@ -76,27 +116,36 @@
   top:-15px;
   border:2px solid black;
   border-bottom: 4px solid black;
+  font-family: digital-font;
+  text-align: center;
 }
 
 #credit-container{
   padding: 10px;
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
+  /* border-top: 2px solid black; */
+  /* border-bottom: 2px solid black; */
   position: absolute;
   /* margin: 0 auto; */
   text-align: center;
   width: calc(100% - 20px);
   bottom: 0px;
+  font-family: digital-font;
 }
 
 .isReadyToSpin{
-  border: 5px solid grey;
-  border-bottom: 5px solid #333;
+  cursor: pointer;
+  border: 5px solid #777;
+  border-bottom: 12px solid #333;
   border-radius: 5px;
   width:50px;
   height:50px;
   background: lightgreen;
   margin-left: 15px;
+  -webkit-animation: flash linear 0.3s infinite;
+  animation: flash linear 0.3s infinite;
+}
+
+.addFlash{
   -webkit-animation: flash linear 0.3s infinite;
   animation: flash linear 0.3s infinite;
 }
@@ -115,6 +164,7 @@
 
 .buttonsContainer{
   margin-top: 10px;
+  /* height: 200px; */
 }
 
 @-webkit-keyframes flash {
