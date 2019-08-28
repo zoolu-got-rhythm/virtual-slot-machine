@@ -150,6 +150,12 @@
   animation: flash linear 0.3s infinite;
 }
 
+.nudgesFlash{
+  background: red;
+  -webkit-animation: flash linear 0.3s infinite;
+  animation: flash linear 0.3s infinite;
+}
+
 .isNotReadyToSpin{
   border: 5px solid grey;
   border-bottom: 5px solid #444;

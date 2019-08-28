@@ -17,12 +17,8 @@ const symbols =
   {numba: "seven", imgEle: document.getElementById("eveyImage")}
 ];
 
-
 var slotMachine1 = new SlotMachine(200, symbols); // make is ready callback/listener mandatory?
 console.log(slotMachine1);
-
-
-
 
 // perhaps make a observer factory or helper
 function CreditObserver(){
@@ -35,6 +31,9 @@ CreditObserver.prototype.constructor = CreditObserver;
 CreditObserver.prototype.update = function(state){
   document.getElementById("credit-container").innerHTML =
   getNumberAsDigitText(state.credit);
+
+  document.getElementById("credit-earnings").innerHTML =
+  getNumberAsDigitText(state.nudges);
 }
 
 
@@ -62,8 +61,10 @@ HoldsAndNudgesObserver.prototype.update = function(state){
     }
 
     if(!state.reelsAreLockedFromNudges){
+      x[i].classList.add("nudgesFlash");
       x[i].innerHTML = "nudge";
     }else{
+      x[i].classList.remove("nudgesFlash");
       x[i].innerHTML = "hold";
     }
   }
@@ -105,6 +106,10 @@ function getNumberAsDigitText(num){
 var slotMachine1Container = document.getElementById("slotMachineContainer");
 slotMachine1.appendVisualToParentInDom(slotMachine1Container);
 console.log(slotMachine1);
+
+slotMachine1.setOnBonusListener(function(){
+  alert("bonus");
+});
 
 
 

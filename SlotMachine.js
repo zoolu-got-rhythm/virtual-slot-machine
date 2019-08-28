@@ -38,6 +38,7 @@ function SlotMachine(size, symbols){
   this.credit = 0;
 
   this.waitingForCallback = false;
+  this.onGotBonusListener = null;
 
 
   // var c = document.createElement("canvas");
@@ -163,7 +164,9 @@ SlotMachine.prototype.step = function(timestamp) {
                 self.grantNudges(Math.ceil(Math.random()*3)); // grant up to 3 nudges , minimum 1
               }
             }
-            // self.checkForJackpot();
+            if(self.checkIfBonus() && self.onGotBonusListener != null){
+              self.onGotBonusListener();
+            }
           });
 
         }
@@ -181,6 +184,10 @@ SlotMachine.prototype.step = function(timestamp) {
   }else{
     this.animFrameRequestId = window.requestAnimationFrame(this.step.bind(this));
   }
+}
+
+SlotMachine.prototype.setOnBonusListener = function(onGotBonusListener){
+  this.onGotBonusListener = onGotBonusListener;
 }
 
 SlotMachine.prototype.grantNudges = function(nOfNudges){
@@ -204,6 +211,14 @@ SlotMachine.prototype.checkForNOfBonusSymbols = function(){
       }
   }
   return nOfBonusSymbols;
+}
+
+SlotMachine.prototype.checkIfBonus = function(){
+  if(this.checkForNOfBonusSymbols() == 3){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 SlotMachine.prototype.grantHold = function(){
@@ -300,6 +315,9 @@ SlotMachine.prototype.nudgeReel = function(reelIndex){
     if(this.reels[reelIndex].isCurrentlyBeingNudged == false){
       window.cancelAnimationFrame(rid);
       rid = null;
+      if(this.checkIfBonus() && this.onGotBonusListener != null){
+        this.onGotBonusListener();
+      }
     }else{
       rid = window.requestAnimationFrame(stepLocal.bind(this));
     }
@@ -309,6 +327,7 @@ SlotMachine.prototype.nudgeReel = function(reelIndex){
     console.log("nudges remaining before this nudge:" + this.nudges);
     this.reels[reelIndex].nudge();
     this.nudges = this.nudges - 1;
+    this.update();
     rid = window.requestAnimationFrame(stepLocal.bind(this));
   }
 }
