@@ -62,7 +62,7 @@ HoldsAndNudgesObserver.prototype.update = function(state){
 
     if(!state.reelsAreLockedFromNudges){
       x[i].classList.add("nudgesFlash");
-      x[i].innerHTML = "nudge";
+      x[i].innerHTML = "↓";
     }else{
       x[i].classList.remove("nudgesFlash");
       x[i].innerHTML = "hold";
