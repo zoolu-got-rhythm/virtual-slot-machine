@@ -17,7 +17,7 @@ const symbols =
   {numba: "seven", imgEle: document.getElementById("eveyImage")}
 ];
 
-var slotMachine1 = new SlotMachine(200, symbols); // make is ready callback/listener mandatory?
+var slotMachine1 = new SlotMachine(170, symbols); // make is ready callback/listener mandatory?
 console.log(slotMachine1);
 
 // perhaps make a observer factory or helper
@@ -33,7 +33,7 @@ CreditObserver.prototype.update = function(state){
   getNumberAsDigitText(state.credit);
 
   document.getElementById("credit-earnings").innerHTML =
-  getNumberAsDigitText(state.nudges);
+  getNumberAsDigitText(state.nudges).substring(3);
 }
 
 

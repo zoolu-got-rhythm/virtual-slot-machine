@@ -5,6 +5,16 @@
   background: #ccc;
 }
 
+h4{
+  text-decoration: underline;
+  font-family: arial;
+  margin-bottom:5px;
+}
+
+p{
+  font-family: arial;
+  margin-top: 5px;
+}
 
 @font-face{
  font-family:'digital-font';
@@ -29,10 +39,10 @@
 }
 
 #gamblingMachineContainer{
-  /* background:blue; */
+  /* background:black; */
   /* position: relative; */
-  border: 5px solid #777;
-  border-bottom: 12px solid #222;
+  border: 5px solid #444;
+  /* border-bottom: 12px solid #222; */
   border-radius: 5px;
   display: flex;
   flex-direction: row;
@@ -79,14 +89,19 @@
 
 #credit-earnings{
   position: absolute;
-  border:3px solid red;
-  border-radius: 6px;
-  padding: 5px;
-  background: yellow;
+  /* border:3px solid red; */
+  /* border-radius: 6px; */
+  padding: 10px;
+  /* border-top: 2px solid black; */
+  /* border-bottom: 2px solid black; */
+  position: absolute;
+  /* margin: 0 auto; */
   text-align: center;
+  width: calc(100% - 20px);
   bottom: 0px;
-  width: calc(100% - 16px);
   font-family: digital-font;
+  font-size: 1.2em;
+  color: lime;
 }
 
 #creditInformationContainer{
@@ -102,7 +117,34 @@
   border-radius: 6px;
   position: relative;
   margin-top: 10px;
-  background: yellow;
+  background: black;
+}
+
+#nudges-remaining-container{
+  height:30%;
+  border:3px solid red;
+  border-radius: 6px;
+  position: relative;
+  /* margin-top: 10px; */
+  /* margin-bottom:5px; */
+  margin-top: 20px;
+  background: black;
+}
+
+#nudges-title{
+  position: absolute;
+  width:80%;
+  padding-top: 2px;
+  height:15px;
+  left: 8%;
+  background: red;
+  font-size: 0.8em;
+  border-radius: 6px;
+  top:-15px;
+  border:2px solid black;
+  border-bottom: 4px solid black;
+  font-family: digital-font;
+  text-align: center;
 }
 
 #credit-title{
@@ -130,6 +172,7 @@
   width: calc(100% - 20px);
   bottom: 0px;
   font-family: digital-font;
+  color: lime;
 }
 
 .isReadyToSpin{
@@ -151,9 +194,8 @@
 }
 
 .nudgesFlash{
-  background: red;
-  -webkit-animation: flash linear 0.3s infinite;
-  animation: flash linear 0.3s infinite;
+  -webkit-animation: orangeFlash linear 0.3s infinite;
+  animation: orangeFlash linear 0.3s infinite;
 }
 
 .isNotReadyToSpin{
@@ -181,5 +223,18 @@
 @keyframes flash {
   0% { background: white; }
   50% { background: lime; }
+  100% { background: white; }
+}
+
+
+@-webkit-keyframes orangeFlash {
+  0% { background: white; }
+  50% { background: orange; }
+  100% { background: white; }
+}
+
+@keyframes orangeFlash {
+  0% { background: white; }
+  50% { background: orange; }
   100% { background: white; }
 }
