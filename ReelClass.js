@@ -10,7 +10,7 @@ function Reel(symbolsArr, ctx, xAxisPos, slotMachineSize, reelBoundsOffsetYAxis)
   this.xAxisPos = xAxisPos;
   this.populateInitReel();
   this.endReelSpin = false;
-  this.stopReel = false;
+  this.stopReel = true;
   this.reelIsLocked = false;
   this.isCurrentlyBeingNudged = false;
 

@@ -340,24 +340,27 @@ SlotMachine.prototype.update = function(){
 
 SlotMachine.prototype.spinReels = function(){
   var self = this;
-  if(this.credit >= 10 && (this.haveAllReelsStoppedSpinning() || this.firstGo)){
-    this.credit = this.credit - 10;
-    if(this.isReadyToSpinListener != null)
-      this.isReadyToSpinListener(false);
-    this.reelsAreLockedFromHolds = true;
-    this.reelsAreLockedFromNudges = true;
-    this.waitingForCallback = false; // rename this member variable
-    this.nudges = 0;
+  if(this.credit >= 10 && this.animFrameRequestId == null && (this.haveAllReelsStoppedSpinning() || this.firstGo)){
+    // this.haveAllReelsSlottedIntoThereFinalPositions(function(){
+      console.log("spinning callback hit")
+      self.credit = self.credit - 10;
+      if(self.isReadyToSpinListener != null)
+        self.isReadyToSpinListener(false);
+      self.reelsAreLockedFromHolds = true;
+      self.reelsAreLockedFromNudges = true;
+      self.waitingForCallback = false; // rename self member variable
+      self.nudges = 0;
 
-    this.firstGo = false;
-    this.start = null;
-    this.reels.forEach(function(reel){
-      reel.setReadyToStart();
-    });
+      self.firstGo = false;
+      self.start = null;
+      self.reels.forEach(function(reel){
+        reel.setReadyToStart();
+      });
 
-    console.log("about to call update");
-    this.update(); // notify any observers that are register'd
+      console.log("about to call update");
+      self.update(); // notify any observers that are register'd
 
-    this.animFrameRequestId = window.requestAnimationFrame(this.step.bind(this));
+      self.animFrameRequestId = window.requestAnimationFrame(self.step.bind(self));
+    // });
   }
 }
