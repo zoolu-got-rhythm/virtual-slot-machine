@@ -40,6 +40,8 @@ function SlotMachine(size, symbols){
   this.waitingForCallback = false;
   this.onGotBonusListener = null;
 
+  this.onHaveWonListener = null;
+
 
   // var c = document.createElement("canvas");
   // c.width = size;
@@ -164,9 +166,15 @@ SlotMachine.prototype.step = function(timestamp) {
                 self.grantNudges(Math.ceil(Math.random()*3)); // grant up to 3 nudges , minimum 1
               }
             }
+
             if(self.checkIfBonus() && self.onGotBonusListener != null){
               self.onGotBonusListener();
             }
+
+            if(self.checkForJackpot() && self.onHaveWonListener != null){
+              self.onHaveWonListener(symbolRewardTypeEnum.JACKPOT);
+            }
+
           });
 
         }
@@ -188,6 +196,11 @@ SlotMachine.prototype.step = function(timestamp) {
 
 SlotMachine.prototype.setOnBonusListener = function(onGotBonusListener){
   this.onGotBonusListener = onGotBonusListener;
+}
+
+// ts interface for this listener
+SlotMachine.prototype.setOnHaveWonListener = function(onHaveWonListener){
+  this.onHaveWonListener = onHaveWonListener;
 }
 
 SlotMachine.prototype.grantNudges = function(nOfNudges){
@@ -246,6 +259,7 @@ SlotMachine.prototype.haveAllReelsStoppedSpinning = function(){
   return allReelsHaveStoppedSpin;
 }
 
+// RETURN TRUE OR FALSE FOR NOW
 SlotMachine.prototype.checkForJackpot = function(){
   let isJackPot = false;
 
@@ -259,11 +273,12 @@ SlotMachine.prototype.checkForJackpot = function(){
         break;
       }
   }
+  return isJackPot;
 
-  if(isJackPot){
-    // add money to earnings;
-    //callback
-  }
+  // if(isJackPot){
+  //   // add money to earnings;
+  //   //callback
+  // }
 }
 
 SlotMachine.prototype.addCredit = function(amount){
