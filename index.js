@@ -21,35 +21,17 @@ var slotMachine1 = new SlotMachine(170, symbols); // make is ready callback/list
 console.log(slotMachine1);
 
 // perhaps make a observer factory or helper
-function CreditObserver(){
-  Observer.call(this);
-}
-
-CreditObserver.prototype = Object.create(Observer.prototype);
-CreditObserver.prototype.constructor = CreditObserver;
-
-CreditObserver.prototype.update = function(state){
+var CreditObserver = observerClassFactory(function(state){
   document.getElementById("credit-container").innerHTML =
   getNumberAsDigitText(state.credit);
 
   document.getElementById("credit-earnings").innerHTML =
   getNumberAsDigitText(state.nudges).substring(3);
-}
-
+});
 
 slotMachine1.addObserver(new CreditObserver());
 
-
-
-
-function HoldsAndNudgesObserver(){
-  Observer.call(this);
-}
-
-HoldsAndNudgesObserver.prototype = Object.create(Observer.prototype);
-HoldsAndNudgesObserver.prototype.constructor = HoldsAndNudgesObserver;
-
-HoldsAndNudgesObserver.prototype.update = function(state){
+var HoldsAndNudgesObserver = observerClassFactory(function(state){
   console.log("holds and nudges observer being ran");
   var x = document.getElementsByClassName("nudgeOrMove");
   for (let i = 0; i < x.length; i++) {
@@ -68,10 +50,9 @@ HoldsAndNudgesObserver.prototype.update = function(state){
       x[i].innerHTML = "hold";
     }
   }
-}
+});
 
 slotMachine1.addObserver(new HoldsAndNudgesObserver());
-
 
 slotMachine1.addCredit(200);
 
