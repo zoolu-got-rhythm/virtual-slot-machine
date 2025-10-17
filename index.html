@@ -1,80 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en">
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
 
-  <title>slot machine</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+    <title>slot machine</title>
+    <meta name="description" content="The HTML5 Herald" />
+    <meta name="author" content="SitePoint" />
 
-  <link rel="stylesheet" href="stylesheet.css" />
-</head>
+    <link rel="stylesheet" href="stylesheet.css" />
+  </head>
 
-<body>
-  <div style="display:none;">
-  <img id="pikachuImage"
-       src="pikachu.png">
+  <body>
+    <div style="display: none">
+      <img id="pikachuImage" src="pikachu.png" />
 
-       <img id="charmanderImage"
-            src="charmander.png">
+      <img id="charmanderImage" src="charmander.png" />
 
-            <img id="eveyImage"
-                 src="evey.png">
+      <img id="eveyImage" src="evey.png" />
 
-                 <img id="ghastlyImage"
-                      src="ghastly.png">
+      <img id="ghastlyImage" src="ghastly.png" />
 
-                      <img id="psyduckImage"
-                           src="psyduck.png">
+      <img id="psyduckImage" src="psyduck.png" />
 
-                           <img id="snorlaxImage"
-                                src="snorlax.png">
+      <img id="snorlaxImage" src="snorlax.png" />
 
-                                <img id="zaptosImage"
-                                     src="zaptos.png">
-                                   </div>
-
-  <!-- <canvas id="c" width="300" height="200"></canvas> -->
-
-  <h4> virtual slot machine js demo </h4>
-  <p> get 3x pikachu's for a bonus, or 3x zaptos' for jackpot </P>
-
-  <div id="gamblingMachineContainer">
-    <div id="slotMachineContainer">
-      <div id="gradTop"> </div>
-      <div id="gradBottom"> </div>
+      <img id="zaptosImage" src="zaptos.png" />
     </div>
 
-    <div id="creditInformationContainer">
-      <div id="credits-remaining-container">
-        <div id="credit-title">
-          credit
+    <!-- <canvas id="c" width="300" height="200"></canvas> -->
+
+    <h4>virtual slot machine js demo</h4>
+    <p>get 3x pikachu's for a bonus, or 3x zaptos' for jackpot</p>
+
+    <div id="gamblingMachineContainer">
+      <div id="slotMachineContainer">
+        <div id="gradTop"></div>
+        <div id="gradBottom"></div>
+      </div>
+
+      <div id="creditInformationContainer">
+        <div id="credits-remaining-container">
+          <div id="credit-title">credit</div>
+          <div id="credit-container">00.00</div>
         </div>
-        <div id="credit-container">
-          00.00
+
+        <div id="nudges-remaining-container">
+          <div id="nudges-title">nudges</div>
+          <div id="credit-earnings">00</div>
         </div>
       </div>
-
-      <div id="nudges-remaining-container">
-      <div id="nudges-title">
-        nudges
-      </div>
-      <div id="credit-earnings">
-        00
-      </div>
+      <div id="clear"></div>
     </div>
-    </div>
-    <div id="clear"> </div>
-  </div>
-  <!-- <button type="button" id="startSpin" class="startSpin">spin</button> -->
-  <script src="Observer.js"> </script>
-  <script src="Observable.js"> </script>
-  <script src="ObserverClassFactory.js"> </script>
+    <!-- <button type="button" id="startSpin" class="startSpin">spin</button> -->
+    <script src="Observer.js"></script>
+    <script src="Observable.js"></script>
+    <script src="ObserverClassFactory.js"></script>
 
-  <script src="symbolRewardTypeEnum.js"> </script>
-  <script src="ReelClass.js"> </script>
-  <script src="SlotMachine.js"> </script>
-  <script src="index.js"> </script>
-</body>
+    <script src="symbolRewardTypeEnum.js"></script>
+    <script src="ReelClass.js"></script>
+    <script src="SlotMachine.js"></script>
+    <script src="index.js"></script>
+  </body>
 </html>
